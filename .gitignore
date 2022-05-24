@@ -25,3 +25,6 @@ Back/
 [Rr]elease/
 obj/
 bin/
+
+SQLite-Tracklogs/
+MyTest/
