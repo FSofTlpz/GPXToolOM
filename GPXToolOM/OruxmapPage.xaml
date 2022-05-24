@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Oruxmap-Daten"
+             x:Class="GPXToolOM.OruxmapPage">
+
+   <ContentPage.ToolbarItems>
+      <ToolbarItem Text="Datenbank neu lesen" 
+                   Order="Secondary" 
+                   Priority="1"
+                   Clicked="ToolbarItem_Clicked"></ToolbarItem>
+   </ContentPage.ToolbarItems>
+
+   <ContentPage.Content>
+      <StackLayout>
+
+         <StackLayout Orientation="Horizontal">
+            <Switch x:Name="SwitchTracksOrWaypoints" 
+                    HorizontalOptions="Start"
+                    IsToggled="True"
+                    Toggled="OnSwitchTracksOrWaypoints_Toggled"></Switch>
+            <Label Text="Tracks oder Split(Way)points anzeigen"
+                   FontSize="Default"
+                   VerticalOptions="Center"/>
+         </StackLayout>
+
+         <Label x:Name="LabelObjectType" FontSize="Default" Text="Tracks"/>
+         <ListView x:Name="ListViewObjects"
+                   ItemTapped="OnListViewObjects_ItemTapped"
+                   Margin="5"
+                   SelectionMode="Single"
+                   VerticalScrollBarVisibility="Always"
+                   HasUnevenRows="True"
+                   BackgroundColor="LightYellow">
+            <ListView.ItemTemplate>
+               <DataTemplate>
+                  <ViewCell>
+                     <ScrollView Orientation="Horizontal">
+                        <StackLayout Orientation="Vertical"
+                                     HorizontalOptions="StartAndExpand"
+                                     Padding="3,5,3,5">
+                           <Label Text="{Binding Text1}" FontSize="Medium" FontAttributes="Bold"/>
+                           <Label Text="{Binding Text2}" FontSize="Small" FontAttributes="Italic"/>
+                           <Label Text="{Binding OrderNumber}" IsVisible="False"/>
+                           <StackLayout.GestureRecognizers>
+                              <TapGestureRecognizer Tapped="OnListViewObjects_ItemTappedHelper" />
+                           </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                     </ScrollView>
+                  </ViewCell>
+               </DataTemplate>
+            </ListView.ItemTemplate>
+         </ListView>
+
+         <BoxView Style="{StaticResource horizontalLine}"/>
+
+         <Label  x:Name="LabelSampled" Text="Auswahl:" FontSize="Default" />
+         <ListView x:Name="ListViewSampledObjects"
+                   ItemTapped="OnListViewSampledObjects_ItemTapped"
+                   Margin="5"
+                   SelectionMode="None"
+                   VerticalScrollBarVisibility="Always"
+                   HasUnevenRows="True"
+                   BackgroundColor="LightBlue">
+            <ListView.ItemTemplate>
+               <DataTemplate>
+                  <ViewCell>
+                     <ScrollView Orientation="Horizontal">
+                        <StackLayout Orientation="Vertical" 
+                                     HorizontalOptions="StartAndExpand"
+                                     Padding="3,5,3,5">
+                           <Label Text="{Binding Text1}" FontSize="Medium" FontAttributes="Bold"/>
+                           <Label Text="{Binding Text2}" FontSize="Small" FontAttributes="Italic"/>
+                           <Label Text="{Binding OrderNumber}" IsVisible="False"/>
+                           <StackLayout.GestureRecognizers>
+                              <TapGestureRecognizer Tapped="OnListViewSampledObjects_ItemTappedHelper" />
+                           </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                     </ScrollView>
+                  </ViewCell>
+               </DataTemplate>
+            </ListView.ItemTemplate>
+         </ListView>
+
+         <BoxView Style="{StaticResource horizontalLine}"/>
+
+         <Frame x:Name="ButtonRun" Style="{StaticResource buttonFrame}" Margin="0,0,0,5">
+            <Label x:Name="Buttontext" Text="Tracks verbinden" FontSize="Medium" Style="{StaticResource buttonText}"/>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonRunTapped"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+      </StackLayout>
+   </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GPXToolOM.App">
+   <Application.Resources>
+
+      <ResourceDictionary>
+         <!-- gemeinsame Ressourcen für die gesamte App -->
+
+         <!-- ein selbstgebauter Button -->
+         <!-- Rahmen -->
+         <Style x:Key="buttonFrame" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="Bisque"/>
+            <Setter Property="OutlineColor" Value="Black"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+            <Setter Property="HasShadow" Value="True"/>
+            <Setter Property="Padding" Value="10,5,10,5"/>
+         </Style>
+         <!-- Buttontext -->
+         <Style x:Key="buttonText" TargetType="Label">
+            <Setter Property="TextColor" Value="Black"/>
+            <Setter Property="LineBreakMode" Value="NoWrap" />
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+         </Style>
+
+
+         <!-- eine einfache waagerechte Trennlinie -->
+         <Style x:Key="horizontalLine" TargetType="BoxView">
+            <Setter Property="BackgroundColor" Value="DarkGray"/>
+            <Setter Property="HeightRequest" Value="1" />
+            <Setter Property="Margin" Value="3"/>
+         </Style>
+
+         <!-- Item der Pseudoliste -->
+         <Style x:Key="PseudolistCellFrame" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="LightBlue"/>
+            <Setter Property="OutlineColor" Value="Blue"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="HasShadow" Value="False"/>
+            <Setter Property="Padding" Value="10,5,10,5"/>
+         </Style>
+         <!-- 1. Textzeile -->
+         <Style x:Key="PseudolistCellDat1" TargetType="Label">
+            <Setter Property="TextColor" Value="Black"/>
+            <Setter Property="FontSize" Value="Medium"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+         </Style>
+         <!-- 2. Textzeile -->
+         <Style x:Key="PseudolistCellDat2" TargetType="Label">
+            <Setter Property="TextColor" Value="Red"/>
+            <Setter Property="FontSize" Value="Small"/>
+            <Setter Property="HorizontalTextAlignment" Value="End"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+         </Style>
+
+      </ResourceDictionary>
+
+   </Application.Resources>
+</Application>

@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GPXToolOM.GPXSplitPage"
+             Title="Track auftrennen"
+             BackgroundColor="Beige">
+   <ContentPage.Resources>
+      <ResourceDictionary>
+         <!-- seitenspezifische Ressourcen -->
+
+         <Style x:Key="labelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="Black"/>
+            <Setter Property="FontSize" Value="Default"/>
+            <Setter Property="HorizontalOptions" Value="StartAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+         </Style>
+
+      </ResourceDictionary>
+   </ContentPage.Resources>
+   <ContentPage.Content>
+      <ScrollView Orientation="Vertical">
+         <StackLayout Orientation="Vertical" Padding="5">
+
+            <Frame x:Name="buttonFile1" Style="{StaticResource buttonFrame}" HorizontalOptions="StartAndExpand">
+               <Label Text="Track-Datei ..." FontSize="Medium" Style="{StaticResource buttonText}" />
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonTrackfile_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+            <ScrollView Orientation="Horizontal">
+               <StackLayout x:Name="PseudoListviewSrcFile1" Orientation="Vertical">
+                  <Frame Style="{StaticResource PseudolistCellFrame}">
+                     <StackLayout Orientation="Vertical">
+                        <Label x:Name="labelFile1" Text="" Style="{StaticResource PseudolistCellDat1}"/>
+                        <Label x:Name="labelInfo1" Text="" Style="{StaticResource PseudolistCellDat2}"/>
+                     </StackLayout>
+                  </Frame>
+               </StackLayout>
+            </ScrollView>
+
+            <BoxView Style="{StaticResource horizontalLine}"/>
+
+
+            <Frame x:Name="buttonFile2" Style="{StaticResource buttonFrame}" HorizontalOptions="StartAndExpand">
+               <Label Text="Point-Datei ..." FontSize="Medium" Style="{StaticResource buttonText}" />
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonPointfile_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+            <ScrollView x:Name="ScrollViewFile2" Orientation="Horizontal">
+               <StackLayout x:Name="PseudoListviewSrcFile2" Orientation="Vertical">
+                  <Frame Style="{StaticResource PseudolistCellFrame}">
+                     <StackLayout Orientation="Vertical">
+                        <Label x:Name="labelFile2" Text="" Style="{StaticResource PseudolistCellDat1}"/>
+                        <Label x:Name="labelInfo2" Text="" Style="{StaticResource PseudolistCellDat2}"/>
+                     </StackLayout>
+                  </Frame>
+               </StackLayout>
+            </ScrollView>
+
+            <BoxView x:Name="horizontalLine2" Style="{StaticResource horizontalLine}"/>
+
+
+            <Frame x:Name="buttonFile3" Style="{StaticResource buttonFrame}" HorizontalOptions="StartAndExpand">
+               <Label Text="Basiszieldateiname ..." FontSize="Medium" Style="{StaticResource buttonText}" />
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonDestBasefilename_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+            <Frame BorderColor="Black" BackgroundColor="LightSalmon"
+                   VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"
+                   Padding="5">
+               <ScrollView Orientation="Horizontal" 
+                           HorizontalOptions="StartAndExpand"
+                           VerticalOptions="CenterAndExpand">
+                  <Label x:Name="labelDestFile" Text="" Style="{StaticResource labelStyle}"/>
+               </ScrollView>
+            </Frame>
+
+            <BoxView Style="{StaticResource horizontalLine}"/>
+
+
+            <Grid Padding="10">
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="Auto"/>
+               </Grid.ColumnDefinitions>
+               <Label Text="Originaldateien löschen" Grid.Row="1" Grid.Column="0" Style="{StaticResource labelStyle}"/>
+               <Switch x:Name="switchFileDelete" Grid.Row="1" Grid.Column="1" IsToggled="False" Toggled="SwitchFileDelete_Toggled"/>
+
+               <Label Text="existierende Zieldateien überschreiben" Grid.Row="2" Grid.Column="0" Style="{StaticResource labelStyle}"/>
+               <Switch x:Name="switchDelDest" Grid.Row="2" Grid.Column="1" IsToggled="False" Toggled="SwitchDelDest_Toggled"/>
+            </Grid>
+
+            <BoxView Style="{StaticResource horizontalLine}"/>
+
+            <Frame x:Name="buttonStart" Style="{StaticResource buttonFrame}">
+               <Label Text="Auftrennen" FontSize="Medium" Style="{StaticResource buttonText}"/>
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonSplit_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+         </StackLayout>
+      </ScrollView>
+   </ContentPage.Content>
+</ContentPage>

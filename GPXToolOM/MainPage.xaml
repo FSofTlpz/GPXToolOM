@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GPXToolOM.MainPage"
+             Title="GPXToolOM, 28.7.2021"
+             BackgroundColor="Beige">
+
+   <ContentPage.Resources>
+      <ResourceDictionary>
+         <Style x:Key="buttonFrame" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="Bisque"/>
+            <Setter Property="OutlineColor" Value="Black"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="HasShadow" Value="True"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="10"/>
+         </Style>
+         <Style x:Key="buttonText" TargetType="Label">
+            <Setter Property="TextColor" Value="Black"/>
+            <Setter Property="FontSize" Value="Medium"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+         </Style>
+      </ResourceDictionary>
+   </ContentPage.Resources>
+
+   <ContentPage.ToolbarItems>
+      <ToolbarItem Text="Oruxmaps-Datenbank" 
+                   Order="Secondary" 
+                   Priority="1"
+                   Clicked="ToolbarItem_Clicked"></ToolbarItem>
+   </ContentPage.ToolbarItems>
+
+   <ScrollView Orientation="Vertical">
+
+      <StackLayout x:Name="stackLayoutMain" Padding="0,0,0,0">
+
+         <Frame x:Name="buttonOruxmapConcat" Style="{StaticResource buttonFrame}">
+            <Label Text="OM-Tracks verbinden" Style="{StaticResource buttonText}">
+            </Label>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonOruxmapConcatTapped"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+         <Frame x:Name="buttonOruxmapSplit" Style="{StaticResource buttonFrame}">
+            <Label Text="OM-Tracksegmente trennen" Style="{StaticResource buttonText}">
+            </Label>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonOruxmapSplitTapped"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+         <Frame x:Name="buttonOruxmapSplit2" Style="{StaticResource buttonFrame}">
+            <Label Text="OM-Tracks an Punkten trennen" Style="{StaticResource buttonText}">
+            </Label>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonOruxmapSplit2Tapped"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+         <BoxView Style="{StaticResource horizontalLine}"/>
+
+         <Frame x:Name="buttonConcat" Style="{StaticResource buttonFrame}">
+            <Label Text="Datei-Tracks verbinden" Style="{StaticResource buttonText}">
+            </Label>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonConcatTapped"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+         <Frame x:Name="buttonSplit" Style="{StaticResource buttonFrame}">
+            <Label Text="Datei-Tracksegmente trennen" Style="{StaticResource buttonText}">
+            </Label>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonSplitTapped"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+         <Frame x:Name="buttonSplit2" Style="{StaticResource buttonFrame}">
+            <Label Text="Datei-Track an Punkten trennen" Style="{StaticResource buttonText}">
+            </Label>
+            <Frame.GestureRecognizers>
+               <TapGestureRecognizer Tapped="ButtonSplitTapped2"/>
+            </Frame.GestureRecognizers>
+         </Frame>
+
+      </StackLayout>
+   </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GPXToolOM.GPXConcatPage"
+             Title="Tracks verbinden"
+             BackgroundColor="Beige">
+   <ContentPage.Resources>
+      <ResourceDictionary>
+         <!-- seitenspezifische Ressourcen -->
+
+         <Style x:Key="labelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="Black"/>
+            <Setter Property="FontSize" Value="Default"/>
+            <Setter Property="HorizontalOptions" Value="StartAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+         </Style>
+         
+      </ResourceDictionary>
+
+   </ContentPage.Resources>
+   <ContentPage.Content>
+      <ScrollView Orientation="Vertical">
+         <StackLayout Orientation="Vertical" Padding="5">
+
+            <Frame x:Name="ButtonFile1" Style="{StaticResource buttonFrame}" HorizontalOptions="StartAndExpand">
+               <Label Text="Trackdatei anhängen ..." FontSize="Medium" Style="{StaticResource buttonText}" />
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonFile1_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+            <ScrollView Orientation="Horizontal">
+               <StackLayout x:Name="PseudoListviewSrcFiles" Orientation="Vertical">
+                  <Frame Style="{StaticResource PseudolistCellFrame}">
+                     <StackLayout Orientation="Vertical">
+                        <Label Text="ghi 0123456789" Style="{StaticResource PseudolistCellDat1}"/>
+                        <Label Text="123456789 Bytes" Style="{StaticResource PseudolistCellDat2}"/>
+                     </StackLayout>
+                  </Frame>
+                  <Frame Style="{StaticResource PseudolistCellFrame}">
+                     <StackLayout Orientation="Vertical">
+                        <Label Text="abc 0123456789" Style="{StaticResource PseudolistCellDat1}"/>
+                        <Label Text="123456789 Bytes" Style="{StaticResource PseudolistCellDat2}"/>
+                     </StackLayout>
+                  </Frame>
+                  <Frame Style="{StaticResource PseudolistCellFrame}">
+                     <StackLayout Orientation="Vertical">
+                        <Label Text="def 0123456789 0123456789 0123456789 0123456789 0123456789" Style="{StaticResource PseudolistCellDat1}"/>
+                        <Label Text="123456789 Bytes" Style="{StaticResource PseudolistCellDat2}"/>
+                     </StackLayout>
+                  </Frame>
+               </StackLayout>
+            </ScrollView>
+
+            <BoxView Style="{StaticResource horizontalLine}"/>
+
+
+            <Frame x:Name="buttonFile3" Style="{StaticResource buttonFrame}" HorizontalOptions="StartAndExpand">
+               <Label Text="Zieldatei ..." FontSize="Medium" Style="{StaticResource buttonText}"/>
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonDestFile_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+            <Frame BorderColor="Black" BackgroundColor="LightSalmon"
+                   VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"
+                   Padding="5">
+               <ScrollView Orientation="Horizontal" 
+                           HorizontalOptions="StartAndExpand"
+                           VerticalOptions="CenterAndExpand">
+                  <Label x:Name="labelDestFile" Text="" Style="{StaticResource labelStyle}"/>
+               </ScrollView>
+            </Frame>
+
+            <BoxView Style="{StaticResource horizontalLine}"/>
+
+
+            <Grid Padding="10">
+               <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+                  <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="Auto"/>
+               </Grid.ColumnDefinitions>
+               <Label Text="kürzeste Verbindung verwenden" Grid.Row="0" Grid.Column="0" Style="{StaticResource labelStyle}"/>
+               <Switch x:Name="switchShortConcat" Grid.Row="0" Grid.Column="1" IsToggled="True" Toggled="SwitchShortConcat_Toggled"/>
+
+               <Label Text="Waypoints übernehmen" Grid.Row="1" Grid.Column="0" Style="{StaticResource labelStyle}"/>
+               <Switch x:Name="switchInsertWaypoint" Grid.Row="1" Grid.Column="1" IsToggled="True" Toggled="SwitchInsertWaypoint_Toggled"/>
+
+               <Label Text="Routen übernehmen" Grid.Row="2" Grid.Column="0" Style="{StaticResource labelStyle}"/>
+               <Switch x:Name="switchInsertRoute" Grid.Row="2" Grid.Column="1" IsToggled="False" Toggled="SwitchInsertRoute_Toggled"/>
+
+               <Label Text="Originaldateien löschen" Grid.Row="3" Grid.Column="0" Style="{StaticResource labelStyle}"/>
+               <Switch x:Name="switchFileDelete" Grid.Row="3" Grid.Column="1" IsToggled="False" Toggled="SwitchFileDelete_Toggled"/>
+            </Grid>
+
+            <BoxView Style="{StaticResource horizontalLine}"/>
+
+
+            <Frame x:Name="ButtonStart" Style="{StaticResource buttonFrame}">
+               <Label Text="Verbinden" FontSize="Medium" Style="{StaticResource buttonText}"/>
+               <Frame.GestureRecognizers>
+                  <TapGestureRecognizer Tapped="ButtonStart_Tapped"/>
+               </Frame.GestureRecognizers>
+            </Frame>
+
+         </StackLayout>
+      </ScrollView>
+   </ContentPage.Content>
+</ContentPage>
