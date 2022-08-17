@@ -208,6 +208,8 @@ namespace FSofTUtils.Xamarin.Control {
          }
       }
 
+      List<NativeSoundData> nativesounddata = null;
+
 
       public SoundPicker() {
          InitializeComponent();
@@ -215,13 +217,14 @@ namespace FSofTUtils.Xamarin.Control {
          SoundDataList = new ObservableCollection<SoundData>(new List<SoundData>());
          BindingContext = this;
 
+         myCollectionView.RemainingItemsThreshold = 5;         // "Nachfüllportionen" für Daten
+         myCollectionView.RemainingItemsThresholdReached += MyCollectionView_RemainingItemsThresholdReached;
+
          ReloadData();
       }
 
       public void ReloadData() {
-         SoundDataList.Clear();
-
-         List<NativeSoundData> nativesounddata = DependencyService.Get<INativeSoundPicker>().GetNativeSoundData(true, false, true, false, false);
+         nativesounddata = DependencyService.Get<INativeSoundPicker>().GetNativeSoundData(true, false, true, false, false);
          try {
             nativesounddata.AddRange(DependencyService.Get<INativeSoundPicker>().GetNativeSoundData(false, false, true, false, false));
          } catch (Exception ex) {
@@ -229,11 +232,13 @@ namespace FSofTUtils.Xamarin.Control {
          }
          nativesounddata.Sort();
 
-         for (int i = 0; i < nativesounddata.Count; i++)
-            if (nativesounddata[i].FileExists)
-               addNativeSoundData(nativesounddata[i]);
+         for (int i = nativesounddata.Count - 1; i >= 0; i--)
+            if (!nativesounddata[i].FileExists)
+               nativesounddata.RemoveAt(i);
 
-         nativesounddata.Clear();
+         SoundDataList.Clear();
+
+         fillDataToCollectionView(); // Erst-Befüllung
 
          if (SoundDataList.Count > 0) {
             myCollectionView.SelectedItem = SoundDataList[0];
@@ -241,6 +246,23 @@ namespace FSofTUtils.Xamarin.Control {
          }
 
          sliderVolume.Value = SoundData.Volume;
+      }
+
+      void fillDataToCollectionView() {
+         if (nativesounddata.Count > 0)
+            for (int i = 0; 0 < nativesounddata.Count && i < myCollectionView.RemainingItemsThreshold; i++) {
+               addNativeSoundData(nativesounddata[0]);
+               nativesounddata.RemoveAt(0);
+            }
+      }
+
+      /// <summary>
+      /// Retrieve more data here and add it to the CollectionView's ItemsSource collection.
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void MyCollectionView_RemainingItemsThresholdReached(object sender, EventArgs e) {
+         fillDataToCollectionView(); // Nach-Befüllung
       }
 
       private void sd_PropertyChanged(object sender, PropertyChangedEventArgs e) {
@@ -331,7 +353,7 @@ namespace FSofTUtils.Xamarin.Control {
 
          if (e.CurrentSelection != null && e.CurrentSelection.Count == 1) {
             SoundData sd = e.CurrentSelection[0] as SoundData;
-            sd.Active = true;
+            //sd.Active = true;     // NICHT automatisch einschalten (Nervfaktor)
          }
 
       }

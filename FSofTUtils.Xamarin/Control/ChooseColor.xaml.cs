@@ -17,32 +17,7 @@ namespace FSofTUtils.Xamarin.Control {
       /// </summary>
       public event EventHandler<EventArgs> ColorChanged;
 
-      /// <summary>
-      /// aktuell eingestellte Farbe
-      /// </summary>
-      public Color ActualColor {
-         get => Color.FromRgba(ActualColorR, ActualColorG, ActualColorB, ActualColorA);
-         //set {
-
-         //   SetValue(ActualColorProperty, value);
-
-         //   //System.Diagnostics.Debug.WriteLine("ActualColor.set(): " + ActualColor + " -> " + value);
-
-         //   //if (!isOnInit) {
-         //   //   if (ActualColor != value) {
-         //   //      //System.Diagnostics.Debug.WriteLine("ActualColor.set(): " + ActualColor + " -> " + value);
-         //   //      SetValue(ActualColorProperty, value);
-         //   //      //BackgroundColor = value;
-         //   //      //ActualColorR = value.R;
-         //   //      //ActualColorG = value.G;
-         //   //      //ActualColorB = value.B;
-         //   //      //ActualColorA = value.A;
-         //   //      //OnColorChanged(new EventArgs());
-         //   //   }
-         //   //}
-         //}
-      }
-
+ 
       #region  Binding-Var BorderSize
 
       public static readonly BindableProperty BorderSizeProperty = BindableProperty.Create(
@@ -73,70 +48,112 @@ namespace FSofTUtils.Xamarin.Control {
 
       #endregion
 
-      #region  Binding-Vars ActualColorR, ActualColorG, ActualColorB, ActualColorA
+      #region  Binding-Vars ColorComponentR, ColorComponentG, ColorComponentB, ColorComponentA
 
-      public static readonly BindableProperty ActualColorRProperty = BindableProperty.Create(
-          nameof(ActualColorR),
+      public static readonly BindableProperty ColorComponentRProperty = BindableProperty.Create(
+          nameof(ColorComponentR),
           typeof(double),
           typeof(ChooseColor),
           0.0,
-          propertyChanged: changeActualColor);
+          propertyChanged: changeColorComponent);
 
-      public double ActualColorR {
-         get => (double)GetValue(ActualColorRProperty);
+      public double ColorComponentR {
+         get => (double)GetValue(ColorComponentRProperty);
          set {
-            if (ActualColorR != value) 
-               SetValue(ActualColorRProperty, value);
+            if (ColorComponentR != value)
+               SetValue(ColorComponentRProperty, value);
          }
       }
 
-      public static readonly BindableProperty ActualColorGProperty = BindableProperty.Create(
-          nameof(ActualColorG),
+      public static readonly BindableProperty ColorComponentGProperty = BindableProperty.Create(
+          nameof(ColorComponentG),
           typeof(double),
           typeof(ChooseColor),
           0.0,
-          propertyChanged: changeActualColor);
+          propertyChanged: changeColorComponent);
 
-      public double ActualColorG {
-         get => (double)GetValue(ActualColorGProperty);
+      public double ColorComponentG {
+         get => (double)GetValue(ColorComponentGProperty);
          set {
-            if (ActualColorG != value) 
-               SetValue(ActualColorGProperty, value);
+            if (ColorComponentG != value)
+               SetValue(ColorComponentGProperty, value);
          }
       }
 
-      public static readonly BindableProperty ActualColorBProperty = BindableProperty.Create(
-          nameof(ActualColorB),
+      public static readonly BindableProperty ColorComponentBProperty = BindableProperty.Create(
+          nameof(ColorComponentB),
           typeof(double),
           typeof(ChooseColor),
           0.0,
-          propertyChanged: changeActualColor);
+          propertyChanged: changeColorComponent);
 
-      public double ActualColorB {
-         get => (double)GetValue(ActualColorBProperty);
+      public double ColorComponentB {
+         get => (double)GetValue(ColorComponentBProperty);
          set {
-            if (ActualColorB != value) 
-               SetValue(ActualColorBProperty, value);
+            if (ColorComponentB != value)
+               SetValue(ColorComponentBProperty, value);
          }
       }
 
-      public static readonly BindableProperty ActualColorAProperty = BindableProperty.Create(
-          nameof(ActualColorA),
+      public static readonly BindableProperty ColorComponentAProperty = BindableProperty.Create(
+          nameof(ColorComponentA),
           typeof(double),
           typeof(ChooseColor),
           1.0,
-          propertyChanged: changeActualColor);
+          propertyChanged: changeColorComponent);
 
-      public double ActualColorA {
-         get => (double)GetValue(ActualColorAProperty);
+      public double ColorComponentA {
+         get => (double)GetValue(ColorComponentAProperty);
          set {
-            if (ActualColorA != value) 
-               SetValue(ActualColorAProperty, value);
+            if (ColorComponentA != value)
+               SetValue(ColorComponentAProperty, value);
          }
       }
 
-      static void changeActualColor(BindableObject bindable, object oldValue, object newValue) {
-         (bindable as ChooseColor).changeColor();
+      static void changeColorComponent(BindableObject bindable, object oldValue, object newValue) {
+         var control = bindable as ChooseColor;
+         if (control != null &&
+             (double)oldValue != (double)newValue)
+            control.colorComponentChanged();
+      }
+
+      #endregion
+
+      #region  Binding-Var Color
+
+      public static readonly BindableProperty ColorProperty = BindableProperty.Create(
+           nameof(Color),
+           typeof(Color),
+           typeof(ChooseColor),
+           Color.Red,
+           propertyChanged: changeColor);
+
+      bool setColorComponentIntern = false;
+
+      public Color Color {
+         get => (Color)GetValue(ColorProperty);
+         set {
+            setColorComponentIntern = true;
+            ColorComponentR = value.R;
+            ColorComponentG = value.G;
+            ColorComponentB = value.B;
+            ColorComponentA = value.A;
+            setColorComponentIntern = false;
+
+            BackgroundColor = Color;
+
+            if (Color != value) {
+               SetValue(ColorProperty, value);
+               OnColorChanged(new EventArgs());
+            }
+         }
+      }
+
+      private static void changeColor(BindableObject bindable, object oldValue, object newValue) {
+         var control = bindable as ChooseColor;
+         if (control != null &&
+             (Color)oldValue != (Color)newValue)
+            control.Color = (Color)newValue;
       }
 
       #endregion
@@ -146,9 +163,13 @@ namespace FSofTUtils.Xamarin.Control {
          InitializeComponent();
       }
 
-      void changeColor() {
-         BackgroundColor = ActualColor;
-         OnColorChanged(new EventArgs());
+      /// <summary>
+      /// eine einzelne Farbkomponente wurde verändert
+      /// <para>(wird nur berücksichtigt, wenn es von einem Slider kam)</para>
+      /// </summary>
+      void colorComponentChanged() {
+         if (!setColorComponentIntern)
+            BackgroundColor = Color = new Color(ColorComponentR, ColorComponentG, ColorComponentB, ColorComponentA);
       }
 
       protected virtual void OnColorChanged(EventArgs e) {

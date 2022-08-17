@@ -75,6 +75,7 @@ namespace GPXToolOM.Droid {
             dlg.SetCancelable(false);
             dlg.Show();
          }
+
       }
 
       /// <summary>
@@ -165,7 +166,7 @@ namespace GPXToolOM.Droid {
       /// </summary>
       public event Action<int, Result, Intent> MyOnActivityResult;
 
-      #region StartActivityForResultAsync
+      #region MyStartActivityForResultAsync
 
       private int myActivityResultRegistrationCounter = 10000;
 
@@ -196,7 +197,7 @@ namespace GPXToolOM.Droid {
       void myActivityResult4AsyncExt(int requestCode, Result resultCode, Intent data) {
          if (myActivityResultRegistrations.TryGetValue(requestCode, out TaskCompletionSource<Tuple<Result, Intent>> completionSource)) {
             myActivityResultRegistrations.Remove(requestCode);
-            completionSource.SetResult(Tuple.Create(resultCode, data));
+            completionSource.SetResult(Tuple.Create(resultCode, data)); // danach wird der Code NACH MyStartActivityForResultAsync() fortgesetzt
          }
       }
 

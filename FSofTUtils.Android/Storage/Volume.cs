@@ -97,21 +97,19 @@ namespace FSofTUtils.Android.Storage {
       string Path4StorageVolume(StorageVolume sv) {
          string path = "";
          try {
-            // http://journals.ecs.soton.ac.uk/java/tutorial/native1.1/implementing/method.html
-            IntPtr methodID = JNIEnv.GetMethodID(sv.Class.Handle, "getPath", "()Ljava/lang/String;");    // getPath() ex. in Android 11 nicht mehr
-            IntPtr lref = JNIEnv.CallObjectMethod(sv.Handle, methodID);
-            using (var value = new Java.Lang.Object(lref, JniHandleOwnership.TransferLocalRef)) {
-               path = value.ToString();
-            }
+            if (Build.VERSION.SdkInt < BuildVersionCodes.R) {
+               // http://journals.ecs.soton.ac.uk/java/tutorial/native1.1/implementing/method.html
+               IntPtr methodID = JNIEnv.GetMethodID(sv.Class.Handle, "getPath", "()Ljava/lang/String;");    // getPath() ex. in Android 11 nicht mehr
+               IntPtr lref = JNIEnv.CallObjectMethod(sv.Handle, methodID);
+               using (var value = new Java.Lang.Object(lref, JniHandleOwnership.TransferLocalRef)) {
+                  path = value.ToString();
+               }
+            } else
+               path = sv.Directory.AbsolutePath;
+
          } catch (Exception ex) {
             path = "";
             System.Diagnostics.Debug.WriteLine("Exception in Volume.Path4StorageVolume " + sv.MediaStoreVolumeName + ": " + ex.Message);
-         }
-         if (path == "") {
-            if (sv.MediaStoreVolumeName == "external_primary")
-               path = "/storage/primary";
-            else
-               path = "/storage/" + sv.MediaStoreVolumeName;
          }
          return path;
       }

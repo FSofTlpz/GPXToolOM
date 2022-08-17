@@ -62,18 +62,34 @@ namespace FSofTUtils.Android.DependencyTools {
       static Ringtone exclusiveRingtone = null;
 
       public void PlayExclusiveNativeSound(NativeSoundData nativeSoundData, float volume = 1.0F, bool looping = true) {
-         StopExclusiveNativeSound();
+         /*    nativeSoundData.Intern == true                                 -> MediaStore.Audio.Media.InternalContentUri
+          *    nativeSoundData.Intern == false && nativeSoundData.ID != ""    -> MediaStore.Audio.Media.ExternalContentUri.ToString() + "/" + nativeSoundData.ID
+          *    nativeSoundData.Intern == false && nativeSoundData.ID == ""    -> nativeSoundData.Data
+          */
          global::Android.Net.Uri uri = nativeSoundData.ID == "" ?
-                                             uri = global::Android.Net.Uri.Parse(nativeSoundData.Data) :
-                                             uri = global::Android.Net.Uri.Parse((nativeSoundData.Intern ?
+                                             global::Android.Net.Uri.Parse(nativeSoundData.Data) :       // ev. "file:" + ... ?
+                                             global::Android.Net.Uri.Parse((nativeSoundData.Intern ?
                                                                                                 MediaStore.Audio.Media.InternalContentUri :
                                                                                                 MediaStore.Audio.Media.ExternalContentUri).ToString() + "/" + nativeSoundData.ID);
-         PlayExclusiveNativeSound(uri.SchemeSpecificPart, volume, looping);
+         playExclusiveNativeSound(uri, volume, looping);
       }
 
-      public void PlayExclusiveNativeSound(string uri, float volume = 1.0F, bool looping = true) {
+      /// <summary>
+      /// Ein Pfad, der mit '//' anfängt, muss mit einer Authority, z.B. 'media' beginnen. Jeder andere Pfad wird als normaler Dateipfad interpretiert.
+      /// </summary>
+      /// <param name="path"></param>
+      /// <param name="volume"></param>
+      /// <param name="looping"></param>
+      public void PlayExclusiveNativeSound(string path, float volume = 1.0F, bool looping = true) {
+         if (path.StartsWith("//"))
+            playExclusiveNativeSound(global::Android.Net.Uri.Parse("content:" + path), volume, looping);
+         else
+            playExclusiveNativeSound(global::Android.Net.Uri.Parse("file:" + path), volume, looping);
+      }
+
+      void playExclusiveNativeSound(global::Android.Net.Uri uri, float volume = 1.0F, bool looping = true) {
          StopExclusiveNativeSound();
-         Ringtone rt = RingtoneManager.GetRingtone(global::Android.App.Application.Context, global::Android.Net.Uri.Parse(uri));
+         Ringtone rt = RingtoneManager.GetRingtone(global::Android.App.Application.Context, uri);
          if (rt != null) {
             rt.AudioAttributes = new AudioAttributes.Builder()
                                      .SetUsage(AudioUsageKind.Alarm)

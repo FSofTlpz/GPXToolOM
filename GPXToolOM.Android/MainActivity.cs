@@ -18,17 +18,19 @@ namespace GPXToolOM.Droid {
 
          Xamarin.Essentials.Platform.Init(this, savedInstanceState);
          global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-         LoadApplication(new App(this));
+         //LoadApplication(new App(this));
          //LoadApplication(new App());
 
          // zusätzlich
          onCreateExtend(savedInstanceState,
                         new string[] {
+                              Manifest.Permission.AccessNetworkState,
                               Manifest.Permission.WriteExternalStorage,    // u.a. für Cache
                               Manifest.Permission.ReadExternalStorage,     // u.a. für Karten und Konfig.
                               //Manifest.Permission.AccessFineLocation,      // GPS-Standort            ACHTUNG: Dieses Recht muss ZUSÄTZLICH im Manifest festgelegt sein, sonst wird es NICHT angefordert!
-                              Manifest.Permission.AccessNetworkState,
-                        });
+                        }
+                        );
+
       }
 
       public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults) {

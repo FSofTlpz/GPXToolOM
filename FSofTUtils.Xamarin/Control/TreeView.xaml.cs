@@ -11,38 +11,55 @@ namespace FSofTUtils.Xamarin.Control {
       #region Events
 
       public class TreeViewNodeEventArgs : EventArgs {
-
+         /// <summary>
+         /// auslösender <see cref="TreeViewNode"/> oder null, wenn vom <see cref="TreeView"/>
+         /// </summary>
          public TreeViewNode TreeViewNode { get; }
+
+         public TreeViewNodeEventArgs(TreeViewNode tn) {
+            TreeViewNode = tn;
+         }
+      }
+
+      public class TreeViewNodeStatusChangedEventArgs : TreeViewNodeEventArgs {
+
+         public bool Cancel { get; set; }
+
+         public TreeViewNodeStatusChangedEventArgs(TreeViewNode tn) : base(tn) {
+            Cancel = false;
+         }
+
+      }
+
+      public class TreeViewNodeChangedEventArgs : TreeViewNodeEventArgs {
 
          public TreeViewNode OldTreeViewNode { get; }
 
-         public int Position { get; }
-
-         public int OldPosition { get; }
-
-
-         public TreeViewNodeEventArgs(TreeViewNode tn, int pos = -1) :
-            this(tn, null, pos) {
-         }
-
-         public TreeViewNodeEventArgs(TreeViewNode tn, TreeViewNode oldtn, int pos = -1, int oldpos = -1) {
-            TreeViewNode = tn;
-            Position = pos;
+         public TreeViewNodeChangedEventArgs(TreeViewNode tn, TreeViewNode oldtn) : base(tn) {
             OldTreeViewNode = oldtn;
-            OldPosition = oldpos;
          }
       }
 
 
       /// <summary>
+      /// Bevor sich bei einem <see cref="TreeViewNode"/> <see cref="TreeViewNode.Checked"/> ändert.
+      /// </summary>
+      public event EventHandler<TreeViewNodeStatusChangedEventArgs> OnBeforeCheckedChanged;
+
+      /// <summary>
+      /// Bei einem <see cref="TreeViewNode"/> ändert sich <see cref="TreeViewNode.Checked"/>.
+      /// </summary>
+      public event EventHandler<TreeViewNodeEventArgs> OnCheckedChanged;
+
+      /// <summary>
+      /// Bevor sich bei einem <see cref="TreeViewNode"/> <see cref="TreeViewNode.Expanded"/> ändert.
+      /// </summary>
+      public event EventHandler<TreeViewNodeStatusChangedEventArgs> OnBeforeExpandedChanged;
+
+      /// <summary>
       /// Bei einem <see cref="TreeViewNode"/> ändert sich <see cref="TreeViewNode.Expanded"/>.
       /// </summary>
       public event EventHandler<TreeViewNodeEventArgs> OnExpandedChanged;
-
-      /// <summary>
-      /// Der ausgewählte Node hat sich geändert.
-      /// </summary>
-      public event EventHandler<TreeViewNodeEventArgs> OnSelectedNodeChanged;
 
       /// <summary>
       /// Auf einen <see cref="TreeViewNode"/> wurde getippt.
@@ -59,12 +76,17 @@ namespace FSofTUtils.Xamarin.Control {
       /// </summary>
       public event EventHandler<TreeViewNodeEventArgs> OnNodeSwiped;
 
+      /// <summary>
+      /// Der ausgewählte Node hat sich geändert.
+      /// </summary>
+      public event EventHandler<TreeViewNodeChangedEventArgs> OnSelectedNodeChanged;
+
       #endregion
 
-      #region  Binding-Var ColorText
+      #region  Binding-Var Textcolor
 
-      public static readonly BindableProperty ColorTextProperty = BindableProperty.Create(
-         "ColorText",
+      public static readonly BindableProperty TextcolorProperty = BindableProperty.Create(
+         nameof(Textcolor),
          typeof(Color),
          typeof(Color),
          Color.Black);
@@ -72,68 +94,68 @@ namespace FSofTUtils.Xamarin.Control {
       /// <summary>
       /// Textfarbe eines TreeNode-Items
       /// </summary>
-      public Color ColorText {
-         get => (Color)GetValue(ColorTextProperty);
-         set => SetValue(ColorTextProperty, value);
+      public Color Textcolor {
+         get => (Color)GetValue(TextcolorProperty);
+         set => SetValue(TextcolorProperty, value);
       }
 
       #endregion
 
-      #region  Binding-Var ColorSelectedText
+      #region  Binding-Var TextColorSelectedNode
 
-      public static readonly BindableProperty ColorSelectedTextProperty = BindableProperty.Create(
-         "ColorSelectedText",
+      public static readonly BindableProperty TextColorSelectedNodeProperty = BindableProperty.Create(
+         nameof(TextColorSelectedNode),
          typeof(Color),
          typeof(Color),
-         Color.Black);
+         Color.White);
 
       /// <summary>
       /// Textfarbe eines ausgewählten TreeNode-Items
       /// </summary>
-      public Color ColorSelectedText {
-         get => (Color)GetValue(ColorSelectedTextProperty);
-         set => SetValue(ColorSelectedTextProperty, value);
+      public Color TextColorSelectedNode {
+         get => (Color)GetValue(TextColorSelectedNodeProperty);
+         set => SetValue(TextColorSelectedNodeProperty, value);
       }
 
       #endregion
 
-      #region  Binding-Var BackColorSelectedNode
+      #region  Binding-Var BackcolorSelectedNode
 
-      public static readonly BindableProperty BackColorSelectedNodeProperty = BindableProperty.Create(
-         "BackColorSelectedNode",
+      public static readonly BindableProperty BackcolorSelectedNodeProperty = BindableProperty.Create(
+         nameof(BackcolorSelectedNode),
          typeof(Color),
          typeof(Color),
-         Color.LightGray);
+         Color.DarkGray);
 
       /// <summary>
       /// Hintergrundfarbe eines ausgewählten TreeNode-Items
       /// </summary>
-      public Color BackColorSelectedNode {
-         get => (Color)GetValue(BackColorSelectedNodeProperty);
-         set => SetValue(BackColorSelectedNodeProperty, value);
+      public Color BackcolorSelectedNode {
+         get => (Color)GetValue(BackcolorSelectedNodeProperty);
+         set => SetValue(BackcolorSelectedNodeProperty, value);
       }
 
       #endregion
 
-      #region  Binding-Var ChildIndent
+      #region  Binding-Var ChildNodeIndent
 
-      public static readonly BindableProperty ChildIndentMarginProperty = BindableProperty.Create(
-         "ChildIndent",
+      public static readonly BindableProperty ChildNodeIndentMarginProperty = BindableProperty.Create(
+         nameof(ChildNodeIndent),
          typeof(Thickness),
          typeof(Thickness),
          new Thickness(50, 0, 0, 0));
 
-      public Thickness ChildIndentMargin {
-         get => (Thickness)GetValue(ChildIndentMarginProperty);
-         set => SetValue(ChildIndentMarginProperty, value);
+      public Thickness ChildNodeIndentMargin {
+         get => (Thickness)GetValue(ChildNodeIndentMarginProperty);
+         set => SetValue(ChildNodeIndentMarginProperty, value);
       }
 
       /// <summary>
       /// linker Einzug für den Child-Bereich
       /// </summary>
-      public double ChildIndent {
-         get => ChildIndentMargin.Left;
-         set => SetValue(ChildIndentMarginProperty, new Thickness(value, 0, 0, 0));  // ChildIndentMargin = new Thickness(value, 0, 0, 0);
+      public double ChildNodeIndent {
+         get => ChildNodeIndentMargin.Left;
+         set => SetValue(ChildNodeIndentMarginProperty, new Thickness(value, 0, 0, 0));  // ChildIndentMargin = new Thickness(value, 0, 0, 0);
       }
 
       #endregion
@@ -141,7 +163,7 @@ namespace FSofTUtils.Xamarin.Control {
       #region  Binding-Var FontSize
 
       public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
-         "FontSize",
+         nameof(FontSize),
          typeof(double),
          typeof(double),
          new FontSizeConverter().ConvertFromInvariantString("Medium"));
@@ -169,17 +191,19 @@ namespace FSofTUtils.Xamarin.Control {
                 !selectedNode.Equals(value)) {
                TreeViewNode oldSelectedNode = SelectedNode;
                if (oldSelectedNode != null) {
-                  selectedNode.BackColorNode = BackgroundColor;
-                  selectedNode.BackColorText = BackgroundColor;
-                  selectedNode.ColorText = ColorText;
+                  selectedNode.BackcolorNode = BackgroundColor;
+                  selectedNode.BackcolorText = BackgroundColor;
+                  selectedNode.Textcolor = Textcolor;
                }
                selectedNode = value;
 
-               selectedNode.BackColorNode = BackColorSelectedNode;
-               selectedNode.BackColorText = BackColorSelectedNode;
-               selectedNode.ColorText = ColorSelectedText;
+               if (selectedNode != null) {
+                  selectedNode.BackcolorNode = BackcolorSelectedNode;
+                  selectedNode.BackcolorText = BackcolorSelectedNode;
+                  selectedNode.Textcolor = TextColorSelectedNode;
+               }
 
-               OnSelectedNodeChanged?.Invoke(this, new TreeViewNodeEventArgs(selectedNode, oldSelectedNode));
+               OnSelectedNodeChanged?.Invoke(this, new TreeViewNodeChangedEventArgs(selectedNode, oldSelectedNode));
             }
          }
       }
@@ -201,6 +225,32 @@ namespace FSofTUtils.Xamarin.Control {
          get => ChildNodes > 0;
       }
 
+      ///// <summary>
+      ///// Child-Nodes sichtbar?
+      ///// </summary>
+      //public bool Expanded {
+      //   get => XamlChildContainer.IsVisible;
+      //   set {
+      //      if (XamlChildContainer.IsVisible != value) {
+      //         bool change = false;
+      //         if (value) {
+      //            if (HasChildNodes)
+      //               change = true;
+      //         } else
+      //            change = true;
+
+      //         if (change) {
+      //            TreeViewNodeStatusChangedEventArgs args = new TreeViewNodeStatusChangedEventArgs(null);
+      //            OnBeforeExpandedChanged?.Invoke(this, args);
+      //            if (!args.Cancel) {
+      //               XamlChildContainer.IsVisible = value;
+      //               OnExpandedChanged?.Invoke(this, new TreeViewNodeEventArgs(null));
+      //            }
+      //         }
+      //      }
+      //   }
+      //}
+
 
       public TreeView() {
          InitializeComponent();
@@ -212,7 +262,7 @@ namespace FSofTUtils.Xamarin.Control {
       /// </summary>
       /// <param name="xamlChildContainer"></param>
       /// <returns></returns>
-      public static IList<TreeViewNode> GetChildNodes(StackLayout xamlChildContainer) {
+      public static List<TreeViewNode> GetChildNodes(StackLayout xamlChildContainer) {
          List<TreeViewNode> result = new List<TreeViewNode>();
          foreach (View item in xamlChildContainer.Children) {
             if (item is TreeViewNode)
@@ -225,7 +275,7 @@ namespace FSofTUtils.Xamarin.Control {
       /// liefert alle Child-Nodes
       /// </summary>
       /// <returns></returns>
-      public IList<TreeViewNode> GetChildNodes() {
+      public List<TreeViewNode> GetChildNodes() {
          return GetChildNodes(XamlChildContainer);
       }
 
@@ -297,8 +347,11 @@ namespace FSofTUtils.Xamarin.Control {
       /// </summary>
       /// <param name="text"></param>
       /// <param name="extdata"></param>
-      public void AddChildNode(string text, object extdata = null) {
-         AddChildNode(new TreeViewNode(text, extdata));
+      /// <returns></returns>
+      public TreeViewNode AddChildNode(string text, object extdata = null) {
+         TreeViewNode tn = new TreeViewNode(text, extdata);
+         AddChildNode(tn);
+         return tn;
       }
 
       /// <summary>
@@ -328,8 +381,11 @@ namespace FSofTUtils.Xamarin.Control {
       /// <param name="pos"></param>
       /// <param name="text"></param>
       /// <param name="extdata"></param>
-      public void InsertChildNode(int pos, string text, object extdata = null) {
-         InsertChildNode(pos, new TreeViewNode(text, extdata));
+      /// <returns></returns>
+      public TreeViewNode InsertChildNode(int pos, string text, object extdata = null) {
+         TreeViewNode tn = new TreeViewNode(text, extdata);
+         InsertChildNode(pos, tn);
+         return tn;
       }
 
       /// <summary>
@@ -370,6 +426,20 @@ namespace FSofTUtils.Xamarin.Control {
       }
 
       /// <summary>
+      /// Alle <see cref="TreeViewNode"/> werden entfernt.
+      /// </summary>
+      public static void RemoveChildNodes(StackLayout xamlChildContainer) {
+         xamlChildContainer.Children.Clear();
+      }
+
+      /// <summary>
+      /// Alle <see cref="TreeViewNode"/> werden entfernt.
+      /// </summary>
+      public void RemoveChildNodes() {
+         RemoveChildNodes(XamlChildContainer);
+      }
+
+      /// <summary>
       /// Ist idx ein gültiger Index?
       /// </summary>
       /// <param name="xamlChildContainer"></param>
@@ -384,17 +454,39 @@ namespace FSofTUtils.Xamarin.Control {
 
       public static void SetPropsFromTreeView(TreeView tv, TreeViewNode node) {
          if (tv != null) {
-            node.BackColorNode = tv.BackgroundColor;
-            node.BackColorText = tv.BackgroundColor;
-            node.ColorText = tv.ColorText;
+            node.BackcolorNode = tv.BackgroundColor;
+            node.BackcolorText = tv.BackgroundColor;
+            node.Textcolor = tv.Textcolor;
          }
       }
 
       void registerTreeViewNodeEvents(TreeViewNode node) {
          node.OnTapped += Node_OnTapped;
          node.OnDoubleTapped += Node_OnDoubleTapped;
+
          node.OnSwipe += Node_OnSwipe;
+
+         node.OnBeforeExpandedChanged += Node_OnBeforeExpandedChanged;
          node.OnExpandedChanged += Node_OnExpandedChanged;
+
+         node.OnBeforeCheckedChanged += Node_OnBeforeCheckedChanged;
+         node.OnCheckedChanged += Node_OnCheckedChanged;
+      }
+
+      private void Node_OnBeforeCheckedChanged(object sender, TreeViewNode.BoolResultEventArgs e) {
+         TreeViewNodeStatusChangedEventArgs args = new TreeViewNodeStatusChangedEventArgs(sender as TreeViewNode);
+         OnBeforeCheckedChanged?.Invoke(this, args);
+         e.Cancel = args.Cancel;
+      }
+
+      private void Node_OnCheckedChanged(object sender, EventArgs e) {
+         OnCheckedChanged?.Invoke(this, new TreeViewNodeEventArgs(sender as TreeViewNode));
+      }
+
+      private void Node_OnBeforeExpandedChanged(object sender, TreeViewNode.BoolResultEventArgs e) {
+         TreeViewNodeStatusChangedEventArgs args = new TreeViewNodeStatusChangedEventArgs(sender as TreeViewNode);
+         OnBeforeExpandedChanged?.Invoke(this, args);
+         e.Cancel = args.Cancel;
       }
 
       private void Node_OnExpandedChanged(object sender, EventArgs e) {
@@ -413,7 +505,6 @@ namespace FSofTUtils.Xamarin.Control {
          OnNodeTapped?.Invoke(this, new TreeViewNodeEventArgs(sender as TreeViewNode));
       }
 
-
       /// <summary>
       /// einige Propertie-Änderungen für alle <see cref="TreeViewNode"/> übernehmen
       /// </summary>
@@ -421,10 +512,12 @@ namespace FSofTUtils.Xamarin.Control {
       protected override void OnPropertyChanged([CallerMemberName] string propertyName = null) {
          base.OnPropertyChanged(propertyName);
 
-         if (propertyName == "BackgroundColor" ||
-             propertyName == "ColorText" ||
-             propertyName == "FontSize" ||
-             propertyName == "ChildIndent") {
+         if (propertyName == nameof(BackgroundColor) ||
+             propertyName == nameof(Textcolor) ||
+             //propertyName == nameof(BackcolorSelectedNode) ||
+             //propertyName == nameof(ColorSelectedText) ||
+             propertyName == nameof(FontSize) ||
+             propertyName == nameof(ChildNodeIndent)) {
             changeProperty4Childs(propertyName, GetChildNodes());
          }
       }
@@ -436,21 +529,21 @@ namespace FSofTUtils.Xamarin.Control {
       /// <param name="nodes"></param>
       void changeProperty4Childs(string propertyName, IList<TreeViewNode> nodes) {
          foreach (TreeViewNode node in nodes) {
-            if (propertyName == "BackgroundColor") {
+            if (propertyName == nameof(BackgroundColor)) {
 
                node.BackgroundColor =
-               node.BackColorNode =
-               node.BackColorText = BackgroundColor;
+               node.BackcolorNode =
+               node.BackcolorText = BackgroundColor;
 
-            } else if (propertyName == "ColorText") {
+            } else if (propertyName == nameof(Textcolor)) {
 
-               node.ColorText = ColorText;
+               node.Textcolor = Textcolor;
 
-            } else if (propertyName == "ChildIndent") {
+            } else if (propertyName == nameof(ChildNodeIndent)) {
 
-               node.ChildIndent = ChildIndent;
+               node.ChildNodeIndent = ChildNodeIndent;
 
-            } else if (propertyName == "FontSize") {
+            } else if (propertyName == nameof(FontSize)) {
 
                node.FontSize = FontSize;
 
@@ -459,6 +552,44 @@ namespace FSofTUtils.Xamarin.Control {
             changeProperty4Childs(propertyName, node.GetChildNodes());
          }
       }
+
+      /// <summary>
+      /// bis zum angegebenen <see cref="TreeViewNode"/> "aufklappen"
+      /// </summary>
+      /// <param name="tn"></param>
+      public void ExpandToNode(TreeViewNode tn) {
+         if (tn != null) {
+            TreeViewNode tnparent = tn.ParentNode;
+            while (tnparent != null) {
+               if (!tnparent.Expanded)
+                  tnparent.Expanded = true;
+               tnparent = tnparent.ParentNode;
+            }
+         }
+      }
+
+      /// <summary>
+      /// der angegebene <see cref="TreeViewNode"/>  wird auf jeden Fall sichtbar
+      /// </summary>
+      /// <param name="tn"></param>
+      public void EnsureVisibleNode(TreeViewNode tn) {
+         if (tn != null) {
+            // bei Bedarf erstmal "ausklappen"
+            ExpandToNode(tn);
+            srollToCenter(tn.XamlChildContainer);
+         }
+      }
+
+      async static void srollToCenter(Element el) {
+         Element parent = el.Parent;
+         while (parent != null && !(parent is ScrollView)) {
+            parent = parent.Parent;
+         }
+         if (parent != null &&
+             parent is ScrollView)
+            await (parent as ScrollView).ScrollToAsync(el, ScrollToPosition.Center, false);
+      }
+
 
    }
 }

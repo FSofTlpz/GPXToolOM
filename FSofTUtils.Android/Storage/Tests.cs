@@ -69,7 +69,7 @@ namespace FSofTUtils.Android.Storage {
                 !saf.SetPersistentPermissions(vol.StorageVolumeNames[idx], idx))
                await saf.Ask4PersistentPermissonAndWait4Result(vol.StorageVolumeNames[idx], idx);
 
-            //testStd(vol.StorageVolumePaths[idx]);
+            testStd(vol.StorageVolumePaths[idx]);
 
             if (idx > 0)
                testDf(vol.StorageVolumeNames[idx], "");

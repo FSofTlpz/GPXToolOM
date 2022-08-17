@@ -11,7 +11,13 @@ namespace FSofTUtils.Xamarin.DependencyTools {
 
       void PlayExclusiveNativeSound(NativeSoundData nativeSoundData, float volume, bool looping);
 
-      void PlayExclusiveNativeSound(string uri, float volume, bool looping);
+      /// <summary>
+      /// Ein Pfad, der mit '//' anfängt, muss mit einer Authority, z.B. 'media' beginnen. Jeder andere Pfad wird als normaler Dateipfad interpretiert.
+      /// </summary>
+      /// <param name="path"></param>
+      /// <param name="volume"></param>
+      /// <param name="looping"></param>
+      void PlayExclusiveNativeSound(string path, float volume, bool looping);
 
       void StopExclusiveNativeSound();
 

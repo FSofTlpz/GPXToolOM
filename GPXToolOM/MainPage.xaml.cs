@@ -9,7 +9,7 @@ using Xamarin.Forms;
 namespace GPXToolOM {
    public partial class MainPage : ContentPage {
 
-      const string TITLE = "GPXToolOM, © by FSofT 11.8.2021";
+      const string TITLE = "GPXToolOM, © by FSofT 17.8.2022";
 
       const string ORUXMAPGPXDB = "OruxmapGpxDb";
 

@@ -18,8 +18,8 @@ namespace FSofTUtils.Android {
       Xamarin.Touch.TouchEffect libTouchEffect;
       bool capture;
       Func<double, double> fromPixels;
-      static readonly int[] vs = new int[2];
-      readonly int[] twoIntArray = vs;
+      //readonly int[] twoIntArray = vs;
+      int[] twoIntArray = new int[2];
 
       static readonly Dictionary<global::Android.Views.View, TouchEffect> viewDictionary = new Dictionary<global::Android.Views.View, TouchEffect>();
 
@@ -71,7 +71,6 @@ namespace FSofTUtils.Android {
          Point screenPointerCoords = new Point(twoIntArray[0] + motionEvent.GetX(pointerIndex),
                                                twoIntArray[1] + motionEvent.GetY(pointerIndex));
 
-
          // Use ActionMasked here rather than Action to reduce the number of possibilities
          switch (args.Event.ActionMasked) {
             case MotionEventActions.Down:
@@ -79,6 +78,10 @@ namespace FSofTUtils.Android {
                FireEvent(this, id, TouchActionType.Pressed, screenPointerCoords, true);
 
                idToEffectDictionary.Add(id, this);
+               //if (!idToEffectDictionary.ContainsKey(id))
+               //   idToEffectDictionary.Add(id, this);
+               //else
+               //   idToEffectDictionary[id] = this;
 
                capture = libTouchEffect.Capture;
                break;
@@ -87,17 +90,14 @@ namespace FSofTUtils.Android {
                // Multiple Move events are bundled, so handle them in a loop
                for (pointerIndex = 0; pointerIndex < motionEvent.PointerCount; pointerIndex++) {
                   id = motionEvent.GetPointerId(pointerIndex);
+                  screenPointerCoords = new Point(twoIntArray[0] + motionEvent.GetX(pointerIndex),
+                                                  twoIntArray[1] + motionEvent.GetY(pointerIndex));
 
                   if (capture) {
                      senderView.GetLocationOnScreen(twoIntArray);
-
-                     screenPointerCoords = new Point(twoIntArray[0] + motionEvent.GetX(pointerIndex),
-                                                     twoIntArray[1] + motionEvent.GetY(pointerIndex));
-
                      FireEvent(this, id, TouchActionType.Moved, screenPointerCoords, true);
                   } else {
                      CheckForBoundaryHop(id, screenPointerCoords);
-
                      if (idToEffectDictionary[id] != null) {
                         FireEvent(idToEffectDictionary[id], id, TouchActionType.Moved, screenPointerCoords, true);
                      }

@@ -211,8 +211,8 @@ namespace FSofTUtils.Android.DependencyTools {
          List<StorageItem> lst = new List<StorageItem>();
          try {
             int v = vol.GetVolumeNo4Path(fullpath);
-            //if (useStd(v)) {
-            if (true) { // IMMER für die Listenabfrage (ist auch deutlich schneller!!!)
+            if (useStd(v)) {
+            //if (true) { // IMMER für die Listenabfrage (ist auch deutlich schneller!!!)
 
                if (exists(fullpath, true, 0)) { // ex. und ist Verzeichnis
                   if (Directory.Exists(fullpath))
@@ -518,7 +518,8 @@ namespace FSofTUtils.Android.DependencyTools {
       /// <param name="vol"></param>
       /// <returns></returns>
       bool useStd(int vol) {
-         return vol < 1;
+         return !ispre_r ||    // ab Android 11 immer Std.
+                vol < 1;
       }
 
       bool useStd(string fullpath) {

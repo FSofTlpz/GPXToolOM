@@ -17,6 +17,34 @@ namespace FSofTUtils.Xamarin.Control {
 
       #region Events
 
+      public class BoolResultEventArgs : EventArgs {
+
+         /// <summary>
+         /// falls true Abbruch der Aktion
+         /// </summary>
+         public bool Cancel { get; set; }
+
+         public BoolResultEventArgs() {
+            Cancel = false;
+         }
+
+      }
+
+      /// <summary>
+      /// Bevor sich der <see cref="Checked"/>-Status ändert.
+      /// </summary>
+      public event EventHandler<BoolResultEventArgs> OnBeforeCheckedChanged;
+
+      /// <summary>
+      /// Der <see cref="Checked"/>-Status hat sich geändert.
+      /// </summary>
+      public event EventHandler<EventArgs> OnCheckedChanged;
+
+      /// <summary>
+      /// Bevor sich der <see cref="Expanded"/>-Status ändert.
+      /// </summary>
+      public event EventHandler<BoolResultEventArgs> OnBeforeExpandedChanged;
+
       /// <summary>
       /// Der <see cref="Expanded"/>-Status hat sich geändert.
       /// </summary>
@@ -58,10 +86,10 @@ namespace FSofTUtils.Xamarin.Control {
 
       #endregion
 
-      #region  Binding-Var BackColorText
+      #region  Binding-Var BackcolorText
 
-      public static readonly BindableProperty BackColorTextProperty = BindableProperty.Create(
-         "BackColorText",
+      public static readonly BindableProperty BackcolorTextProperty = BindableProperty.Create(
+         nameof(BackcolorText),
          typeof(Color),
          typeof(Color),
          Color.White);
@@ -69,17 +97,17 @@ namespace FSofTUtils.Xamarin.Control {
       /// <summary>
       /// Hintergrundfarbe des Textes
       /// </summary>
-      public Color BackColorText {
-         get => (Color)GetValue(BackColorTextProperty);
-         set => SetValue(BackColorTextProperty, value);
+      public Color BackcolorText {
+         get => (Color)GetValue(BackcolorTextProperty);
+         set => SetValue(BackcolorTextProperty, value);
       }
 
       #endregion
 
-      #region  Binding-Var ColorText
+      #region  Binding-Var Textcolor
 
-      public static readonly BindableProperty ColorTextProperty = BindableProperty.Create(
-         "ColorText",
+      public static readonly BindableProperty TextcolorProperty = BindableProperty.Create(
+         nameof(Textcolor),
          typeof(Color),
          typeof(Color),
          Color.Black);
@@ -87,17 +115,17 @@ namespace FSofTUtils.Xamarin.Control {
       /// <summary>
       /// Hintergrundfarbe des Controls
       /// </summary>
-      public Color ColorText {
-         get => (Color)GetValue(ColorTextProperty);
-         set => SetValue(ColorTextProperty, value);
+      public Color Textcolor {
+         get => (Color)GetValue(TextcolorProperty);
+         set => SetValue(TextcolorProperty, value);
       }
 
       #endregion
 
-      #region  Binding-Var BackColorNode
+      #region  Binding-Var BackcolorNode
 
-      public static readonly BindableProperty BackColorNodeProperty = BindableProperty.Create(
-         "BackColorNode",
+      public static readonly BindableProperty BackcolorNodeProperty = BindableProperty.Create(
+         nameof(BackcolorNode),
          typeof(Color),
          typeof(Color),
          Color.White);
@@ -105,22 +133,22 @@ namespace FSofTUtils.Xamarin.Control {
       /// <summary>
       /// Hintergrundfarbe des gesamten TreeNode-Items
       /// </summary>
-      public Color BackColorNode {
-         get => (Color)GetValue(BackColorNodeProperty);
-         set => SetValue(BackColorNodeProperty, value);
+      public Color BackcolorNode {
+         get => (Color)GetValue(BackcolorNodeProperty);
+         set => SetValue(BackcolorNodeProperty, value);
       }
 
       #endregion
 
-      #region  Binding-Var ChildIndent
+      #region  Binding-Var ChildNodeIndent
 
       public static readonly BindableProperty ChildIndentMarginProperty = BindableProperty.Create(
-         "ChildIndent",
+         nameof(ChildNodeIndent),
          typeof(Thickness),
          typeof(Thickness),
          new Thickness(50, 0, 0, 0));
 
-      public Thickness ChildIndentMargin {
+      public Thickness ChildNodeIndentMargin {
          get => (Thickness)GetValue(ChildIndentMarginProperty);
          set => SetValue(ChildIndentMarginProperty, value);
       }
@@ -128,8 +156,8 @@ namespace FSofTUtils.Xamarin.Control {
       /// <summary>
       /// linker Einzug für den Child-Bereich
       /// </summary>
-      public double ChildIndent {
-         get => ChildIndentMargin.Left;
+      public double ChildNodeIndent {
+         get => ChildNodeIndentMargin.Left;
          set => SetValue(ChildIndentMarginProperty, new Thickness(value, 0, 0, 0));  // ChildIndentMargin = new Thickness(value, 0, 0, 0);
       }
 
@@ -138,7 +166,7 @@ namespace FSofTUtils.Xamarin.Control {
       #region  Binding-Var FontSize
 
       public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
-         "FontSize",
+         nameof(FontSize),
          typeof(double),
          typeof(double),
          new FontSizeConverter().ConvertFromInvariantString("Medium"));
@@ -156,7 +184,7 @@ namespace FSofTUtils.Xamarin.Control {
       #region  Binding-Var ImageExpanded
 
       public static readonly BindableProperty ImageExpandedProperty = BindableProperty.Create(
-         "ImageExpanded",
+         nameof(ImageExpanded),
          typeof(ImageSource),
          typeof(ImageSource),
          imgSrcStdExpanded);
@@ -174,7 +202,7 @@ namespace FSofTUtils.Xamarin.Control {
       #region  Binding-Var ImageCollapsed
 
       public static readonly BindableProperty ImageCollapsedProperty = BindableProperty.Create(
-         "ImageCollapsed",
+         nameof(ImageCollapsed),
          typeof(ImageSource),
          typeof(ImageSource),
          imgSrcStdCollapsed);
@@ -192,7 +220,7 @@ namespace FSofTUtils.Xamarin.Control {
       #region  Binding-Var ImageStandard
 
       public static readonly BindableProperty ImageStandardProperty = BindableProperty.Create(
-         "ImageStandard",
+         nameof(ImageStandard),
          typeof(ImageSource),
          typeof(ImageSource),
          imgSrcStdItem);
@@ -208,7 +236,7 @@ namespace FSofTUtils.Xamarin.Control {
       #endregion
 
 
-      StackLayout XamlChildContainer {
+      public StackLayout XamlChildContainer {
          get => childrenStackLayout;
       }
 
@@ -248,9 +276,44 @@ namespace FSofTUtils.Xamarin.Control {
                   change = true;
 
                if (change) {
-                  XamlChildContainer.IsVisible = value;
-                  changeImage();
-                  OnExpandedChanged?.Invoke(this, new EventArgs());
+                  BoolResultEventArgs args = new BoolResultEventArgs();
+                  OnBeforeExpandedChanged?.Invoke(this, args);
+                  if (!args.Cancel) {
+                     XamlChildContainer.IsVisible = value && HasChildNodes;
+                     OnExpandedChanged?.Invoke(this, new EventArgs());
+                     changeImage();
+                  }
+               }
+            }
+         }
+      }
+
+      /// <summary>
+      /// Ist die Checkbox sichtbar?
+      /// </summary>
+      public bool HasCheckbox {
+         get => checkbox.IsVisible;
+         set => checkbox.IsVisible = value;
+      }
+
+
+      bool checkboxSetInternal = false;
+      bool checkboxResetInternal = false;
+
+      /// <summary>
+      /// Checked-Status (kann auch ohne sichtbare Checkbox verwendet werden)
+      /// </summary>
+      public bool Checked {
+         get => checkbox.IsChecked;
+         set {
+            if (checkbox.IsChecked != value) {
+               BoolResultEventArgs args = new BoolResultEventArgs();
+               OnBeforeCheckedChanged?.Invoke(this, args);
+               if (!args.Cancel) {
+                  checkboxSetInternal = true;
+                  checkbox.IsChecked = value;
+                  checkboxSetInternal = false;
+                  OnCheckedChanged?.Invoke(this, new EventArgs());
                }
             }
          }
@@ -260,14 +323,11 @@ namespace FSofTUtils.Xamarin.Control {
       /// liefert den Parent-Node
       /// </summary>
       public TreeViewNode ParentNode {
-         get => Parent != null &&
-                Parent is StackLayout &&
-                Parent.Parent != null &&
-                Parent.Parent is StackLayout &&
-                Parent.Parent.Parent != null &&
-                Parent.Parent.Parent is TreeViewNode ?   // StackLayout -> StackLayout -> ContentView
-            Parent.Parent.Parent as TreeViewNode :
-            null;
+         get => Parent != null && Parent is StackLayout &&                             // 1. übergeordnete Element StackLayout 
+                Parent.Parent != null && Parent.Parent is StackLayout &&               // 2. übergeordnete Element StackLayout 
+                Parent.Parent.Parent != null && Parent.Parent.Parent is TreeViewNode ? // 3. übergeordnete Element TreeViewNode (ContentView)
+                           Parent.Parent.Parent as TreeViewNode :
+                           null;
       }
 
       /// <summary>
@@ -278,14 +338,12 @@ namespace FSofTUtils.Xamarin.Control {
             TreeViewNode parent = ParentNode;
             if (parent != null)
                return parent.TreeView;
-            else {
-               if (Parent != null &&
-                   Parent is StackLayout &&
-                   Parent.Parent is TreeView) {
-                  return Parent.Parent as TreeView;
-               }
-               return null;
-            }
+            else
+               return Parent != null && Parent is StackLayout &&                          // 1. übergeordnete Element StackLayout 
+                      Parent.Parent != null && Parent.Parent is ScrollView &&             // 2. übergeordnete Element ScrollView 
+                      Parent.Parent.Parent != null && Parent.Parent.Parent is TreeView ?  // 3. übergeordnete Element TreeView 
+                           Parent.Parent.Parent as TreeView :
+                           null;
          }
       }
 
@@ -298,13 +356,14 @@ namespace FSofTUtils.Xamarin.Control {
       public TreeViewNode(string text, object data = null) : this() {
          Text = text;
          ExtendedData = data;
+         HasCheckbox = false;
       }
 
       /// <summary>
       /// liefert alle Child-Nodes
       /// </summary>
       /// <returns></returns>
-      public IList<TreeViewNode> GetChildNodes() {
+      public List<TreeViewNode> GetChildNodes() {
          return TreeView.GetChildNodes(XamlChildContainer);
       }
 
@@ -331,8 +390,11 @@ namespace FSofTUtils.Xamarin.Control {
       /// </summary>
       /// <param name="text"></param>
       /// <param name="extdata"></param>
-      public void AddChildNode(string text, object extdata = null) {
-         AddChildNode(new TreeViewNode(text, extdata));
+      /// <returns></returns>
+      public TreeViewNode AddChildNode(string text, object extdata = null) {
+         TreeViewNode tn = new TreeViewNode(text, extdata);
+         AddChildNode(tn);
+         return tn;
       }
 
       /// <summary>
@@ -351,8 +413,11 @@ namespace FSofTUtils.Xamarin.Control {
       /// <param name="pos"></param>
       /// <param name="text"></param>
       /// <param name="extdata"></param>
-      public void InsertChildNode(int pos, string text, object extdata = null) {
-         InsertChildNode(pos, new TreeViewNode(text, extdata));
+      /// <returns></returns>
+      public TreeViewNode InsertChildNode(int pos, string text, object extdata = null) {
+         TreeViewNode tn = new TreeViewNode(text, extdata);
+         InsertChildNode(pos, tn);
+         return tn;
       }
 
       /// <summary>
@@ -361,6 +426,7 @@ namespace FSofTUtils.Xamarin.Control {
       /// <param name="pos"></param>
       public void RemoveChildNode(int pos) {
          TreeView.RemoveChildNode(XamlChildContainer, pos);
+         changeImage();
       }
 
       /// <summary>
@@ -369,20 +435,27 @@ namespace FSofTUtils.Xamarin.Control {
       /// <param name="node"></param>
       /// <returns></returns>
       public bool RemoveChildNode(TreeViewNode node) {
-         return TreeView.RemoveChildNode(XamlChildContainer, node);
+         bool result = TreeView.RemoveChildNode(XamlChildContainer, node);
+         changeImage();
+         return result;
+      }
+
+      /// <summary>
+      /// entfernt alle untergeordneten <see cref="TreeViewNode"/> 
+      /// </summary>
+      public void RemoveChildNodes() {
+         TreeView.RemoveChildNodes(XamlChildContainer);
+         changeImage();
       }
 
       protected void changeImage() {
-         ImageSource imageSource;
-         if (Expanded) {
-            imageSource = ImageExpanded;
-         } else {
-            if (HasChildNodes)
-               imageSource = ImageCollapsed;
-            else
-               imageSource = ImageStandard;
-         }
-         if (!image.Source.Equals(imageSource))
+         ImageSource imageSource = HasChildNodes ?
+                                       (Expanded ?
+                                             ImageExpanded :
+                                             ImageCollapsed) :
+                                       ImageStandard;
+         if (image.Source == null ||
+             !image.Source.Equals(imageSource))
             image.Source = imageSource;
       }
 
@@ -415,8 +488,25 @@ namespace FSofTUtils.Xamarin.Control {
             tv.SelectedNode = this;
       }
 
+      private void checkbox_CheckedChanged(object sender, CheckedChangedEventArgs e) {
+         if (!checkboxSetInternal &&      // dann durch User
+             !checkboxResetInternal) {    // kein Reset
+            BoolResultEventArgs args = new BoolResultEventArgs();
+            OnBeforeCheckedChanged?.Invoke(this, args);
+            if (!args.Cancel) {
+               OnCheckedChanged?.Invoke(this, new EventArgs());
+            } else {
+               checkboxResetInternal = true;
+               checkbox.IsChecked = !checkbox.IsChecked;
+               checkboxResetInternal = false;
+            }
+         }
+      }
+
       public override string ToString() {
          return Text;
       }
+
+
    }
 }
